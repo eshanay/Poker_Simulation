@@ -23,8 +23,11 @@ else return (10) # No Pair
 }
 }
 
+#now we repeat 5-card draws from a deck of 52 cards 1 million times
 hands.data=t(replicate(1e6,sample(1:52,size=7)))
 data=apply(hands.data,1,function(cards) min(apply(combn(cards,5),2,deal)))
+
+#obtain the frequency distribution of those Hands
 probab=round(table(data)/length(data)*100,4)
 names(probab)=Hands[as.integer(names(probab))]
 cat("Probabilities(in %) of occurrences of various poker Hands\n")
