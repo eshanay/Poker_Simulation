@@ -1,0 +1,151 @@
+#utilizing the dataset of drawn cards from the file Identifying 5-card hands
+starting=hands.data[,1:2]
+is.Pocket.Pair=function(starting) I(length(unique((starting-1)%%13+1))==1)
+is.Suited=function(starting) I(length(unique((starting-1)%/%13+1))==1)
+
+#simulating the chances of improving on the flop from Pocket Pair to
+#3 of a kind or better
+paired.indices=which(apply(starting,1,is.Pocket.Pair)==1)
+Poc.Pair=hands.data[paired.indices,]
+triplet.count<-sum(apply(Poc.Pair[,1:5],1,function(cards) {
+ranks=(cards-1)%%13+1
+sum(ranks[3:5]==ranks[1])==1
+}))
+fullhouse.count<-sum(apply(Poc.Pair[,1:5],1,function(cards){
+ranks=(cards-1)%%13+1
+I(setequal(unname(table(ranks[1:5])),c(3,2)) & sum(ranks[3:5]==ranks[1])==1)
+}))
+quadruplet.count<-sum(apply(Poc.Pair[,1:5],1,function(cards) max(table((cards-1)%%13+1))==4))
+freq.dist<-c(triplet.count,fullhouse.count,quadruplet.count)
+names(freq.dist)=Hands[c(7,4,3)]
+cat("Probability(in %) of improving on the flop from Pocket Pair to a\n")
+round(freq.dist/nrow(Poc.Pair)*100,2)
+#simulating the chances of improving on the flop from Suited Pair to a
+#Flush, Flush draw and Backdoor flush draw
+suited.indices=which(apply(starting,1,is.Suited)==1)
+Suited.Pair=hands.data[suited.indices,]
+flush.variations=function(cards){
+suits=(cards-1)%/%13+1
+suits.freq=sort(unname(table(suits)),decreasing=T)
+if(suits.freq[1]==5) return (1) #having all 5 cards of the same suit
+else if(suits.freq[1]==4) return (2) #having maximum 4 cards of the same suit
+else if(sum(suits[3:5]==suits[1])==1) return (3) #having maximum 3 cards of the same suit
+else return (NA)
+}
+freq.dist=table(apply(Suited.Pair[,1:5],1,flush.variations))
+names(freq.dist)=c("Flush","Flush draw","Backdoor Flush draw")
+cat("Probability(in %) of improving on the flop from Suited Pair to a\n")
+round(freq.dist/length(suited.indices)*100,2)
+
+#simulating the chances of improving on the flop from Unpaired cards to 2 pairs or 1 pair
+Unpaired=hands.data[-union(paired.indices,suited.indices),]
+pair.count=function(cards){
+values=(cards-1)%%13+1
+match1=sum(values[3:5]==values[1])
+match2=sum(values[3:5]==values[2])
+if(match1==1 & match2==1) return (2)
+else if(match1+match2==1) return (1)
+else return (NA)
+}
+freq.dist=table(apply(Unpaired[,1:5],1,pair.count))
+names(freq.dist)=Hands[9:8]
+cat("Probability(in %) of improving on the flop from unpaired cards to a\n")
+round(freq.dist/nrow(Unpaired)*100,2)
+#function to check if the starting the cards are connectors in the range "45" to "TJ"
+is.Connector=function(cards){
+sorted.cards=sort((cards-1)%%13+1)
+I(sorted.cards[1]>=4 & sorted.cards[1]<=10)*I(diff(sorted.cards)==1)
+}
+#function to check if the set of cards is a flush draw
+is.Flush.Draw=function(cards) I(max(table((cards-1)%/%13+1))==4)
+
+#function to check if any 5 out of the set of cards form a Straight
+is.Straight=function(cards){
+values=unique((cards-1)%%13+1)
+if(length(values)==5)
+return (I(all(diff(sort(values))==1) | setequal(sort(values),c(1,10:13))))
+else if(length(values)>5){
+stacking=t(combn(values,5))
+flag=0
+for(r in 1:nrow(stacking))
+if(is.Straight(stacking[r,])==1) {
+flag=1
+break
+}
+return (flag)
+}
+else return (0)
+}
+
+#function to check if the hand of cards form an Open-Ended Straight Draw
+is.OESD=function(cards){
+if(is.Straight(cards)==0){
+denoms=sort(unique((cards-1)%%13+1))
+if(length(denoms)==4) return (all(diff(denoms)==1))
+else if(length(denoms)>4) {
+quadro=t(combn(denoms,4))
+flag=0
+for(ro in 1:nrow(quadro))
+if(is.OESD(quadro[ro,])==1){
+flag=1
+break
+}
+return (flag)
+}
+else return (0)
+}
+else return (0)
+}
+
+#function to check if the set of cards form a Gutshot Straight draw
+is.ISD=function(cards){
+if(is.Straight(cards)==0){
+denoms=unique((cards-1)%%13+1)
+if(length(denoms)>=4)
+{
+quadro=t(combn(denoms,4))
+flag=0
+for(ro in 1:nrow(quadro)){
+if(setequal(sort(quadro[ro,]),1:4) | setequal(sort(quadro[ro,]),c(1,11:13))){
+flag=1
+break
+}
+if(all(is.element(c(1,10),quadro[ro,])) & sum(is.element(11:13,quadro[ro,]))>=1)
+quadro[ro,]=replace(quadro[ro,],which(quadro[ro,]==1),14)
+inside.miss=setdiff(min(quadro[ro,]):max(quadro[ro,]),quadro[ro,])
+if(length(inside.miss)==1 & all(diff(sort(c(quadro[ro,],inside.miss)))==1)){
+flag=1
+break
+}
+}
+return (flag)
+}
+else return (0)
+}
+else return (0)
+}
+
+#function to check if the hand of cards forms a Straight Draw
+is.Straight.Draw=function(cards) is.OESD(cards)+is.ISD(cards)>=1
+
+#simulating the chances of improving on the flop from Suited Connectors("45"-"TJ") to a Straight Draw and a Flush Draw
+suit.con.indices=which(apply(Suited.Pair[,1:2],1,is.Connector)==1)
+Suited.Connector=Suited.Pair[apply(Suited.Pair[,1:2],1,is.Connector)==1,]
+Fl.Draw<-round(sum(apply(Suited.Connector[,1:5],1,function(cards)
+is.Flush.Draw(cards)))/nrow(Suited.Connector)*100,2)
+St.Draw<-round(sum(apply(Suited.Connector[,1:5],1,function(cards)
+is.Straight.Draw(cards)))/nrow(Suited.Connector)*100,2)
+prob.dist<-c(Fl.Draw,St.Draw)
+names(prob.dist)<-c("Flush Draw","Straight Draw")
+cat("Probability(in %) of improving on the flop from same-suited connectors in the range 45-JT to a\n")
+prob.dist
+
+#simulating the chances of improving on the flop from Offsuited connectors("45"-"TJ") to an Open Ended Straight Draw or a Straight
+off.con.indices=which(apply(Unpaired[,1:2],1,is.Connector)==1)
+OffSuited.Connector=Unpaired[off.con.indices,]
+oesd.count=sum(apply(OffSuited.Connector[,1:5],1,is.OESD))
+straight.count=sum(apply(OffSuited.Connector[,1:5],1,is.Straight))
+freq.dist=c(oesd.count,straight.count)
+names(freq.dist)=c("OESD","Straight")
+cat("Probability(in %) of improving on the flop from unpaired connectors 45o-JTo to a\n")
+round(freq.dist/nrow(OffSuited.Connector)*100,2)
