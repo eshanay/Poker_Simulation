@@ -27,8 +27,11 @@ deal <- function(cards){
 hands.data=t(replicate(1e6,sample(1:52,size=7)))
 data=apply(hands.data,1,function(cards) min(apply(combn(cards,5),2,deal)))
 
-#obtain the frequency distribution of those Hands
+#obtain the probability distribution of these Hands
 probab=round(table(data)/length(data)*100,4)
 names(probab)=Hands[as.integer(names(probab))]
-cat("Probabilities(in %) of occurrences of various poker Hands\n")
+cat("Probabilities(in %) of making each poker Hand at showdown\n")
 probab
+#obtaining the cumulative probability distribution of these Hands
+cat("Probability(in %) of making a Hand as good as\n")           
+cumsum(rev(probab))
