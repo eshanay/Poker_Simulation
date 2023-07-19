@@ -1,3 +1,5 @@
+![](https://img.shields.io/badge/Language_used-The_R_programming_language-blue)
+
 The objective of this project is to explore the chances of winning or tying and improving the player’s 5-card hand at different stages of Texas hold’em poker. The cards dealt are simulated using R software, to find answers to some of the questions based on this game which are somewhat difficult to tackle by applications of pure combinatorics.
 
 In this version of Poker, each hand is played with a whole deck of 52 playing cards, which are divided into 4 suits of 13 cards each i.e. spades ♠, hearts ♥, diamonds ♦, clubs ♣. Cards of spades and clubs are black cards, while that of hearts and diamonds are red cards. The card in each suit, are ace(A), king(K), queen(Q), jack(J), 10, 9, 8, 7, 6, 5, 4, 3 and 2. 
