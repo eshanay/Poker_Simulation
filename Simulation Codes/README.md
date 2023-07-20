@@ -1,1 +1,1 @@
-this folder contains all the r codes based on simualtion of many events in a game of texas holdem poker
+This markdown file contains all the r codes based on the simulation of the chances of a player winning or tying a game of texas holdem poker based on increasing the number of players from 2 to 4 and also simulating the chances of improvement of hands from the pre-Flop round to the Flop round, from the Flop round to the Turn, from the Turn to the River and also from the Flop to the River.
