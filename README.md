@@ -1,3 +1,4 @@
+# Simulating the Probabilistic Aspects of Texas holdem Poker
 ![](https://img.shields.io/badge/Language_used-The_R_programming_language-blue)
 
 The objective of this project is to explore the chances of winning or tying and improving the player’s 5-card hand at different stages of Texas hold’em poker. The cards dealt are simulated using R software, to find answers to some of the questions based on this game which are somewhat difficult to tackle by applications of pure combinatorics.
