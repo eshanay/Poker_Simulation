@@ -17,7 +17,7 @@ To see the applications of combinatorics involved in this project, you can read 
 ---
 
 ###  This repository includes
-- **Simulation Codes**: Contains the simulation codes for the different events focused upon in a game of Texas holem Poker
+- **Simulation Codes**: Contains the simulation codes for the different events focused upon in a game of Texas holdem Poker
 - **Diagrams**: Contains all the heat-maps and bar-plots displayed in the project
 
 ---
