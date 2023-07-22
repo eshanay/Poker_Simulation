@@ -12,7 +12,7 @@ One player is the dealer (this role rotates clockwise after each Hand), and bets
 A Hand is won by having the best Hand among the players who did not fold (i.e. refuse to match an opponent’s bet), or by having everyone else fold. The Hand ends when all but one player has folded or when all the cards have been dealt and the last betting round is over for which, the players must show their cards and the player with the highest Hand wins.
 
 So in this project I have simulated the chances of obtaining each Hand as the best 5-card Hand from a total of 7 cards available for each player, and also their chances of winning and tying with each Hands under varying number of players. Next, I have simulatd the chances of winning with each starting Hand under 2,3 and 4 players. Then I have computed the chances of improving the different types of drawing Hands and made Hands into better ones at the Flop stage, at the Turn stage, at the River stage and also from the Flop to the River stage.
-To see the applications of combinatorics involved in this project, you can visit *[Medium]()*.<br>
+To see the applications of combinatorics involved in this project, you can read my article posted on *[Medium](https://medium.com/@eshan.de22/simulating-the-probabilistic-aspects-in-texas-holdem-poker-ec02857f379f)*.<br>
 
 ---
 
@@ -22,7 +22,7 @@ To see the applications of combinatorics involved in this project, you can visit
 
 ---
 
-For any queries, you can reach out to me at my ![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=Linkedin) profile <br> 
+If you have any suggestions or queries, you can reach out to me at my ![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=Linkedin) profile <br> 
 [Eshan De](https://www.linkedin.com/in/eshan-de-b1635b279/)
 
 Or you can also send me an ![Email](https://img.shields.io/badge/Email-white?style=flat&logo=gmail) at <br>
